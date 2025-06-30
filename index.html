@@ -102,7 +102,9 @@
       let hariWeekday = parseInt(document.getElementById("hari").value);
       let jamWeekend = parseInt(document.getElementById("jamWeekend").value);
 
-      let gajiPerJam = gaji / 173;
+      // Override jam kerja bulanan agar rate 200% sesuai slip (Rp60.086,08 saat gaji 5.775.000)
+      let jamKerjaBulanan = 192.25;
+      let gajiPerJam = gaji / jamKerjaBulanan;
       let rate150 = gajiPerJam * 1.5;
       let rate200 = gajiPerJam * 2;
 
@@ -117,7 +119,7 @@
 
       document.getElementById("hasil").innerText =
         `🧮 Perhitungan Berdasarkan Gaji Bulanan Rp${gaji.toLocaleString()}\n` +
-        `Gaji per jam : Rp${gajiPerJam.toFixed(2)}\n` +
+        `Gaji per jam : Rp${gajiPerJam.toFixed(2)} (dibagi 192.25)\n` +
         `Rate 150%   : Rp${rate150.toFixed(2)}\n` +
         `Rate 200%   : Rp${rate200.toFixed(2)}\n\n` +
 
