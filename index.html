@@ -117,18 +117,14 @@
       let jamPertama = Math.min(hariWeekday, totalJamWeekday);
       let jamSeterusnya = Math.max(0, totalJamWeekday - jamPertama);
 
-      // Perhitungan jam weekend: 1 jam pertama per hari → 150%, sisanya 200%
-      let jamPertamaWeekend = Math.min(hariWeekend, jamWeekend);
-      let jamSeterusnyaWeekend = Math.max(0, jamWeekend - jamPertamaWeekend);
+      // Lembur weekend: Semua jam dihitung dengan rate 200% (flat)
+      let lemburWeekend = jamWeekend * rate200;
 
       // Hitung lembur weekday
       let lembur150 = jamPertama * rate150;
       let lembur200 = jamSeterusnya * rate200;
-      let lemburWeekend150 = jamPertamaWeekend * rate150;
-      let lemburWeekend200 = jamSeterusnyaWeekend * rate200;
 
-      // Total lembur weekend dan weekday
-      let lemburWeekend = lemburWeekend150 + lemburWeekend200;
+      // Total uang lembur
       let totalLembur = lembur150 + lembur200 + lemburWeekend;
 
       document.getElementById("hasil").innerText =
@@ -143,8 +139,7 @@
         `- Lembur 200% (${jamSeterusnya} jam): Rp${lembur200.toFixed(2)}\n\n` +
 
         `📅 Weekend\n` +
-        `- Lembur 150% (${jamPertamaWeekend} jam): Rp${lemburWeekend150.toFixed(2)}\n` +
-        `- Lembur 200% (${jamSeterusnyaWeekend} jam): Rp${lemburWeekend200.toFixed(2)}\n\n` +
+        `- Lembur 200% (${jamWeekend} jam): Rp${lemburWeekend.toFixed(2)}\n\n` +
 
         `💰 Total Uang Lembur: Rp${totalLembur.toFixed(2)}`;
     }
