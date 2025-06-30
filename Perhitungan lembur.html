@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kalkulator Lembur</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background: #f9f9f9; border-radius: 10px; }
+    input, label, button { display: block; margin-top: 10px; width: 100%; }
+    input { padding: 8px; font-size: 1em; }
+    button { padding: 10px; font-size: 1em; background-color: #007bff; color: white; border: none; border-radius: 5px; }
+    button:hover { background-color: #0056b3; cursor: pointer; }
+    pre { background: #fff; padding: 15px; border-radius: 8px; font-size: 0.95em; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>Kalkulator Lembur</h2>
+
+  <label>Gaji Bulanan (Rp):
+    <input type="number" id="gaji" value="6642000">
+  </label>
+
+  <label>Total Jam Lembur (Weekday):
+    <input type="number" id="jam" value="25">
+  </label>
+
+  <label>Jumlah Hari Lembur (Weekday):
+    <input type="number" id="hari" value="5">
+  </label>
+
+  <label>Total Jam Lembur (Weekend):
+    <input type="number" id="jamWeekend" value="7">
+  </label>
+
+  <button onclick="hitungLembur()">Hitung</button>
+
+  <h3>Hasil:</h3>
+  <pre id="hasil"></pre>
+
+  <script>
+    function hitungLembur() {
+      let gaji = parseFloat(document.getElementById("gaji").value);
+      let totalJamWeekday = parseInt(document.getElementById("jam").value);
+      let hariWeekday = parseInt(document.getElementById("hari").value);
+      let jamWeekend = parseInt(document.getElementById("jamWeekend").value);
+
+      let gajiPerJam = gaji / 173;
+      let rate150 = gajiPerJam * 1.5;
+      let rate200 = gajiPerJam * 2;
+
+      let jamPertama = Math.min(hariWeekday, totalJamWeekday);
+      let jamSeterusnya = Math.max(0, totalJamWeekday - jamPertama);
+
+      let lembur150 = jamPertama * rate150;
+      let lembur200 = jamSeterusnya * rate200;
+      let lemburWeekend = jamWeekend * rate200;
+
+      let totalLembur = lembur150 + lembur200 + lemburWeekend;
+
+      document.getElementById("hasil").innerText =
+        `🧮 Perhitungan Berdasarkan Gaji Bulanan Rp${gaji.toLocaleString()}\n` +
+        `Gaji per jam (Rp): ${gajiPerJam.toFixed(2)}\n` +
+        `Rate 150% (Weekday 1 jam/hari): ${rate150.toFixed(2)}\n` +
+        `Rate 200% (Weekday dan Weekend): ${rate200.toFixed(2)}\n\n` +
+
+        `⏰ Weekday\n` +
+        `- Lembur 150% (${jamPertama} jam): Rp${lembur150.toFixed(2)}\n` +
+        `- Lembur 200% (${jamSeterusnya} jam): Rp${lembur200.toFixed(2)}\n\n` +
+
+        `📅 Weekend\n` +
+        `- Lembur 200% (${jamWeekend} jam): Rp${lemburWeekend.toFixed(2)}\n\n` +
+
+        `💰 Total Uang Lembur: Rp${totalLembur.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
