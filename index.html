@@ -90,51 +90,64 @@
     <label for="jamWeekend">Total Jam Lembur (Weekend)</label>
     <input type="number" id="jamWeekend" value="0" />
 
+    <label for="hariWeekend">Jumlah Hari Lembur (Weekend)</label>
+    <input type="number" id="hariWeekend" value="0" />
+
     <button onclick="hitungLembur()">Hitung</button>
 
     <pre id="hasil">Masukkan data dan klik "Hitung" untuk melihat hasil.</pre>
   </div>
 
   <script>
-  function hitungLembur() {
-    let gaji = parseFloat(document.getElementById("gaji").value);
-    let totalJamWeekday = parseInt(document.getElementById("jam").value);
-    let hariWeekday = parseInt(document.getElementById("hari").value);
-    let jamWeekend = parseInt(document.getElementById("jamWeekend").value);
+    function hitungLembur() {
+      let gaji = parseFloat(document.getElementById("gaji").value);
+      let totalJamWeekday = parseInt(document.getElementById("jam").value);
+      let hariWeekday = parseInt(document.getElementById("hari").value);
+      let jamWeekend = parseInt(document.getElementById("jamWeekend").value);
+      let hariWeekend = parseInt(document.getElementById("hariWeekend").value);
 
-    // Perhitungan upah per jam untuk 150% → sesuai regulasi (173 jam)
-    let gajiPerJam150 = gaji / 173;
-    let rate150 = gajiPerJam150 * 1.5;
+      // Perhitungan upah per jam untuk 150% → sesuai regulasi (173 jam)
+      let gajiPerJam150 = gaji / 173;
+      let rate150 = gajiPerJam150 * 1.5;
 
-    // Perhitungan upah per jam untuk 200% → override sesuai slip gaji (192.25 jam)
-    let gajiPerJam200 = gaji / 192.25;
-    let rate200 = gajiPerJam200 * 2;
+      // Perhitungan upah per jam untuk 200% → override sesuai slip gaji (192.25 jam)
+      let gajiPerJam200 = gaji / 192.25;
+      let rate200 = gajiPerJam200 * 2;
 
-    let jamPertama = Math.min(hariWeekday, totalJamWeekday);
-    let jamSeterusnya = Math.max(0, totalJamWeekday - jamPertama);
+      let jamPertama = Math.min(hariWeekday, totalJamWeekday);
+      let jamSeterusnya = Math.max(0, totalJamWeekday - jamPertama);
 
-    let lembur150 = jamPertama * rate150;
-    let lembur200 = jamSeterusnya * rate200;
-    let lemburWeekend = jamWeekend * rate200;
+      // Perhitungan jam weekend: 1 jam pertama per hari → 150%, sisanya 200%
+      let jamPertamaWeekend = Math.min(hariWeekend, jamWeekend);
+      let jamSeterusnyaWeekend = Math.max(0, jamWeekend - jamPertamaWeekend);
 
-    let totalLembur = lembur150 + lembur200 + lemburWeekend;
+      // Hitung lembur weekday
+      let lembur150 = jamPertama * rate150;
+      let lembur200 = jamSeterusnya * rate200;
+      let lemburWeekend150 = jamPertamaWeekend * rate150;
+      let lemburWeekend200 = jamSeterusnyaWeekend * rate200;
 
-    document.getElementById("hasil").innerText =
-      `🧮 Perhitungan Berdasarkan Gaji Bulanan Rp${gaji.toLocaleString()}\n` +
-      `Gaji per jam (150%): Rp${gajiPerJam150.toFixed(2)} (dibagi 173)\n` +
-      `Gaji per jam (200%): Rp${gajiPerJam200.toFixed(2)} (dibagi 192.25)\n` +
-      `Rate 150%   : Rp${rate150.toFixed(2)}\n` +
-      `Rate 200%   : Rp${rate200.toFixed(2)}\n\n` +
+      // Total lembur weekend dan weekday
+      let lemburWeekend = lemburWeekend150 + lemburWeekend200;
+      let totalLembur = lembur150 + lembur200 + lemburWeekend;
 
-      `⏰ Weekday\n` +
-      `- Lembur 150% (${jamPertama} jam): Rp${lembur150.toFixed(2)}\n` +
-      `- Lembur 200% (${jamSeterusnya} jam): Rp${lembur200.toFixed(2)}\n\n` +
+      document.getElementById("hasil").innerText =
+        `🧮 Perhitungan Berdasarkan Gaji Bulanan Rp${gaji.toLocaleString()}\n` +
+        `Gaji per jam (150%): Rp${gajiPerJam150.toFixed(2)} (dibagi 173)\n` +
+        `Gaji per jam (200%): Rp${gajiPerJam200.toFixed(2)} (dibagi 192.25)\n` +
+        `Rate 150%   : Rp${rate150.toFixed(2)}\n` +
+        `Rate 200%   : Rp${rate200.toFixed(2)}\n\n` +
 
-      `📅 Weekend\n` +
-      `- Lembur 200% (${jamWeekend} jam): Rp${lemburWeekend.toFixed(2)}\n\n` +
+        `⏰ Weekday\n` +
+        `- Lembur 150% (${jamPertama} jam): Rp${lembur150.toFixed(2)}\n` +
+        `- Lembur 200% (${jamSeterusnya} jam): Rp${lembur200.toFixed(2)}\n\n` +
 
-      `💰 Total Uang Lembur: Rp${totalLembur.toFixed(2)}`;
-  }
-</script>
+        `📅 Weekend\n` +
+        `- Lembur 150% (${jamPertamaWeekend} jam): Rp${lemburWeekend150.toFixed(2)}\n` +
+        `- Lembur 200% (${jamSeterusnyaWeekend} jam): Rp${lemburWeekend200.toFixed(2)}\n\n` +
+
+        `💰 Total Uang Lembur: Rp${totalLembur.toFixed(2)}`;
+    }
+  </script>
 </body>
 </html>
